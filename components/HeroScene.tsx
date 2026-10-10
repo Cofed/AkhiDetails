@@ -1,38 +1,66 @@
 'use client';
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, OrbitControls } from '@react-three/drei';
-import { useRef } from 'react';
+import { Float, OrbitControls, Environment } from '@react-three/drei';
+import { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 
-function CarStudio() {
-  const group = useRef<THREE.Group>(null);
+function Car() {
+  const groupRef = useRef<THREE.Group>(null);
+  const bodyRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (!group.current) return;
-    group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, state.pointer.x * 0.8, 0.03);
-    group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, state.pointer.y * 0.3, 0.03);
+    if (!groupRef.current) return;
+    groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, state.pointer.x * 1.2, 0.05);
+    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, state.pointer.y * 0.4, 0.05);
   });
 
   return (
-    <group ref={group} position={[0, -0.8, 0]}>
-      <Float speed={1.2} rotationIntensity={0.3} floatIntensity={0.5}>
-        <mesh position={[0, 0.1, 0]} castShadow>
-          <boxGeometry args={[3.2, 0.7, 1.5]} />
-          <meshPhysicalMaterial color="#0a0d10" metalness={0.95} roughness={0.18} clearcoat={1} clearcoatRoughness={0.15} />
+    <group ref={groupRef} position={[0, -0.5, 0]}>
+      <Float speed={2} rotationIntensity={0.2} floatIntensity={0.3}>
+        {/* Main body */}
+        <mesh ref={bodyRef} position={[0, 0, 0]} castShadow>
+          <boxGeometry args={[3.5, 0.8, 1.8]} />
+          <meshPhysicalMaterial
+            color="#111111"
+            metalness={0.95}
+            roughness={0.1}
+            clearcoat={1}
+            clearcoatRoughness={0.08}
+            envMapIntensity={2}
+          />
         </mesh>
-        <mesh position={[0.8, 0.55, 0]} castShadow>
-          <boxGeometry args={[1.3, 0.55, 1.2]} />
-          <meshPhysicalMaterial color="#11161b" metalness={0.9} roughness={0.2} clearcoat={1} />
+
+        {/* Roof */}
+        <mesh position={[0.2, 0.7, 0]} castShadow>
+          <boxGeometry args={[2.2, 0.5, 1.5]} />
+          <meshPhysicalMaterial
+            color="#0a0a0a"
+            metalness={0.92}
+            roughness={0.12}
+            clearcoat={1}
+          />
         </mesh>
-        <mesh position={[0.1, 0.7, 0]} castShadow>
-          <boxGeometry args={[0.9, 0.36, 1.05]} />
-          <meshPhysicalMaterial color="#0e1115" metalness={0.92} roughness={0.15} clearcoat={1} />
+
+        {/* Windows */}
+        <mesh position={[0.3, 0.6, 0.76]} castShadow>
+          <boxGeometry args={[1.8, 0.35, 0.1]} />
+          <meshPhysicalMaterial color="#1a1a1a" metalness={0.3} roughness={0.8} />
         </mesh>
-        {[[-1.1, -0.2, 0.78], [-1.1, -0.2, -0.78], [1.1, -0.2, 0.78], [1.1, -0.2, -0.78]].map((position, index) => (
-          <mesh key={index} position={position as [number, number, number]} rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.34, 0.34, 0.18, 32]} />
-            <meshStandardMaterial color="#111111" metalness={0.85} roughness={0.5} />
+
+        {/* Wheels */}
+        {[[-1.2, -0.4, 0.9], [-1.2, -0.4, -0.9], [1.2, -0.4, 0.9], [1.2, -0.4, -0.9]].map((pos, i) => (
+          <mesh key={i} position={pos as [number, number, number]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.42, 0.42, 0.22, 32]} />
+            <meshStandardMaterial color="#1a1a1a" metalness={0.7} roughness={0.4} />
+          </mesh>
+        ))}
+
+        {/* Wheel rims */}
+        {[[-1.2, -0.4, 0.9], [-1.2, -0.4, -0.9], [1.2, -0.4, 0.9], [1.2, -0.4, -0.9]].map((pos, i) => (
+          <mesh key={`rim-${i}`} position={pos as [number, number, number]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.35, 0.35, 0.15, 32]} />
+            <meshStandardMaterial color="#d4af37" metalness={0.95} roughness={0.15} />
           </mesh>
         ))}
       </Float>
@@ -42,18 +70,39 @@ function CarStudio() {
 
 export default function HeroScene() {
   return (
-    <div className="relative h-[520px] w-full overflow-hidden rounded-[32px] border border-[#c9a24b]/20 bg-[#05070a] shadow-[0_30px_60px_rgba(0,0,0,0.45)]">
-      <Canvas camera={{ position: [0, 1.8, 6], fov: 35 }}>
-        <color attach="background" args={['#05070a']} />
-        <fog attach="fog" args={['#05070a', 5, 12]} />
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[4, 4, 4]} intensity={2.2} color="#f2dcab" />
-        <spotLight position={[-5, 5, 5]} angle={0.4} penumbra={1} intensity={18} color="#c9a24b" />
-        <CarStudio />
-        <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} maxPolarAngle={Math.PI / 2.1} minPolarAngle={Math.PI / 3} />
+    <div className="relative h-[520px] w-full overflow-hidden rounded-[32px] border border-[#d4af37]/20 bg-gradient-to-b from-[#0f1420] to-[#0a0e1a]">
+      <Canvas camera={{ position: [0, 1.5, 5], fov: 40 }} gl={{ antialias: true }}>
+        <color attach="background" args={['#0a0e1a']} />
+        <fog attach="fog" args={['#0a0e1a', 8, 20]} />
+
+        {/* Lighting */}
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[5, 8, 5]} intensity={2} color="#ffffff" castShadow />
+        <spotLight position={[-4, 6, -4]} angle={0.5} penumbra={1} intensity={2} color="#d4af37" />
+        <pointLight position={[0, 3, -5]} intensity={1.5} color="#3b82f6" />
+
+        {/* Environment */}
+        <Environment preset="studio" />
+
+        {/* 3D Car */}
+        <Car />
+
+        {/* Controls */}
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          autoRotate={true}
+          autoRotateSpeed={3}
+          maxPolarAngle={Math.PI / 2}
+          minPolarAngle={Math.PI / 3}
+        />
       </Canvas>
-      <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center">
-        <div className="rounded-full border border-[#c9a24b]/30 bg-[#080a0d]/70 px-4 py-2 text-[0.62rem] uppercase tracking-[0.24em] text-[#e3bd6d]">Luxury studio render</div>
+
+      {/* Label */}
+      <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2">
+        <div className="rounded-full border border-[#d4af37]/40 bg-[#0a0e1a]/80 px-4 py-2 text-[0.65rem] uppercase tracking-[0.25em] text-[#e8c547]">
+          Interactive 3D Model
+        </div>
       </div>
     </div>
   );

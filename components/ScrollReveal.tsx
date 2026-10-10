@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -8,7 +8,13 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function ScrollReveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+export default function ScrollReveal({
+  children,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+}) {
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -17,7 +23,7 @@ export default function ScrollReveal({ children, delay = 0 }: { children: React.
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ref.current,
-        { opacity: 0, y: 28 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
@@ -26,7 +32,8 @@ export default function ScrollReveal({ children, delay = 0 }: { children: React.
           delay,
           scrollTrigger: {
             trigger: ref.current,
-            start: 'top 85%',
+            start: 'top 80%',
+            toggleActions: 'play none none none',
           },
         }
       );

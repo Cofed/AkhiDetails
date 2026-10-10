@@ -1,16 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg: #040507;
-  --bg-2: #080a0d;
-  --bg-3: #0c0f13;
-  --text: #f5f6f7;
+  --bg: #0a0e1a;
+  --bg-2: #0f1420;
+  --bg-3: #141b2b;
+  --text: #f0f4f8;
   --muted: #8a939e;
-  --gold: #c9a24b;
-  --gold-light: #e3bd6d;
-  --gold-soft: rgba(201, 162, 75, 0.18);
+  --gold: #d4af37;
+  --gold-light: #e8c547;
+  --gold-soft: rgba(212, 175, 55, 0.15);
 }
 
 * {
@@ -23,9 +25,7 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at top, rgba(201, 162, 75, 0.08), transparent 28%),
-    var(--bg);
+  background: linear-gradient(135deg, #0a0e1a 0%, #0f1420 50%, #0a0e1a 100%);
   color: var(--text);
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
@@ -36,10 +36,10 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-  background-size: 36px 36px;
-  opacity: 0.3;
+  background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
   pointer-events: none;
+  z-index: 0;
 }
 
 img {
@@ -52,10 +52,7 @@ a {
   text-decoration: none;
 }
 
-button,
-input,
-select,
-textarea {
+button, input, select, textarea {
   font: inherit;
 }
 
@@ -71,11 +68,18 @@ p {
   color: var(--muted);
 }
 
-.grid-pattern {
-  background-image:
-    linear-gradient(rgba(201, 162, 75, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201, 162, 75, 0.08) 1px, transparent 1px);
-  background-size: 32px 32px;
+.soft-panel {
+  background: rgba(15, 20, 32, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8c547 45%, #d4af37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .gold-line {
@@ -96,21 +100,71 @@ p {
 }
 
 .gold-line:hover::after {
-  transform: scaleX(1.08);
+  transform: scaleX(1.1);
 }
 
-.soft-panel {
-  background: rgba(12, 15, 19, 0.82);
-  border: 1px solid rgba(201, 162, 75, 0.15);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-  backdrop-filter: blur(10px);
+.btn-primary {
+  @apply rounded-full bg-gradient-to-r from-[#d4af37] to-[#e8c547] px-6 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-[#0a0e1a] transition duration-300 hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:scale-105;
 }
 
-.text-gradient {
-  background: linear-gradient(135deg, #f5f6f7 0%, #e3bd6d 45%, #c9a24b 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.btn-secondary {
+  @apply rounded-full border border-[#d4af37]/50 bg-transparent px-6 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition duration-300 hover:bg-[#d4af37]/10 hover:border-[#e8c547];
+}
+
+.card-hover {
+  @apply transition duration-500 hover:shadow-[0_20px_60px_rgba(212,175,55,0.15)] hover:-translate-y-2;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-in {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
