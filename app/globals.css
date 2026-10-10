@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #040507;
+  --bg-2: #080a0d;
+  --bg-3: #0c0f13;
+  --text: #f5f6f7;
+  --muted: #8a939e;
+  --gold: #c9a24b;
+  --gold-light: #e3bd6d;
+  --gold-soft: rgba(201, 162, 75, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top, rgba(201, 162, 75, 0.08), transparent 28%),
+    var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Archivo', sans-serif;
+  letter-spacing: -0.04em;
+  margin: 0;
+  font-weight: 700;
+}
+
+p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(201, 162, 75, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 162, 75, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.gold-line {
+  position: relative;
+  display: inline-block;
+}
+
+.gold-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.gold-line:hover::after {
+  transform: scaleX(1.08);
+}
+
+.soft-panel {
+  background: rgba(12, 15, 19, 0.82);
+  border: 1px solid rgba(201, 162, 75, 0.15);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #f5f6f7 0%, #e3bd6d 45%, #c9a24b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
